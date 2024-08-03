@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"time"
 
@@ -13,8 +14,8 @@ import (
 )
 
 func main() {
-	// Define a flag for output format
 	format := flag.String("format", "json", "Output format: json or yaml")
+	outputDir := flag.String("output-dir", ".", "Directory to save the report")
 	flag.Parse()
 
 	var kubeconfig string
@@ -45,7 +46,11 @@ func main() {
 		log.Fatalf("Failed to generate report: %v", err)
 	}
 
-	printReport(reportContent)
+	if err := writeReportToFile(reportContent, *outputDir, *format); err != nil {
+		log.Fatalf("Failed to write report to file: %v", err)
+	}
+
+	fmt.Println("Security report generated successfully.")
 }
 
 func scanCluster(clientset *kubernetes.Clientset) []string {

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 
 	"gopkg.in/yaml.v2"
 )
@@ -19,19 +20,18 @@ func generateReport(report SecurityReport, format string) (string, error) {
 	}
 }
 
-// Print the security report in a specified format
-func printReport(reportContent string) {
-	fmt.Println("Security Report:")
-	fmt.Println(reportContent)
-}
-
-// func (report SecurityReport) toYAML() (string, error) {
-// 	data, err := yaml.Marshal(&report)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return string(data), nil
+// // Print the security report in a specified format
+// func printReport(reportContent string) {
+// 	fmt.Println("Security Report:")
+// 	fmt.Println(reportContent)
 // }
+
+// Write the report content to a file
+func writeReportToFile(content string, outputDir string, format string) error {
+	fileName := fmt.Sprintf("report.%s", format)
+	filePath := fmt.Sprintf("%s/%s", outputDir, fileName)
+	return ioutil.WriteFile(filePath, []byte(content), 0644)
+}
 
 // Convert SecurityReport to YAML format
 func (report *SecurityReport) toYAML() (string, error) {
